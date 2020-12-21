@@ -2,7 +2,16 @@
  
 ## Project Highlights
 
-Based on the data regarding the prostate cancer patients from three different datasets, we obtain the probabilities of freedom from BCR among three datasets are significantly different after stratification utilizing Stratified Logrank Test. Also, in order to investigate if demographic factors and genes have effects on survival, we build a Cox’s proportional hazards regression model with imputation and interaction terms as well as a Random Survival Forest model. Furthermore, we compare the results with the previous research in a shiny app and three genes(SYP, SLC2A1 and GCK) appear to have effects on Time to BCR in all 5 methods.
+* Computed Patient Baseline Characteristics table and Kaplan-Meier Curve graphs regarding 3 locations for prostate cancer patients
+* Proved probabilities of freedom from BCR among three locations were significantly different after stratification by conducting Stratified Logrank Test
+* built a AIC Stepwise Cox’s proportional hazards regression model with imputation and interaction terms, obtaining which demographic factors and genes have effects on survival
+* Found which factors and genes have greater effects on survival using Random Survival Forest technique
+
+## Code
+
+* **Data Source**: 3 datasets are from built-in libraries: library(prostateCancerCamcap), library(prostateCancerTaylor), library(prostateCancerStockholm)
+* **Language Used**: R
+* **Libraries Used**: ggplot2, tidyr, devtools, dplyr, party, survival, tcltk, tcltk2, forcats, compareGroups, rms, npsurv, MASS, survminer, randomForestSRC
 
 ## Project Objective
 
@@ -50,7 +59,8 @@ After cleaning, we learned the following from the final joined dataset:
 
 After cleaning and joining the three datasets(Taylor, Cambridge and Stockholm), I conducted univariate analysis among three datasets as a table (Table 1) using compareGroups library. Below is part of the table. 
 
------
+<img align="left" width="400" height="500" src="https://github.com/ensembles4612/Statistical-Analysis-on-Biochemical-Recurrence-Prostate-Cancer-Among-Patients-in-3-Locations/blob/main/table1.png">
+
 
 ## Section 2: Kaplan-Meier Curves
 
@@ -58,13 +68,13 @@ After cleaning and joining the three datasets(Taylor, Cambridge and Stockholm), 
 
 It’s clear from Graph 1 that patients in dataset—Stoch have the highest survival rate before BCR free time turns 90 months. The patients in dataset—Cam have the second highest survival rate until BCR free time turns 60 months, after which the survival rate plumps to 0 when the BCR free time is about 67 months. The patients in dataset—Taylor have the lowest survival time at the beginning and becomes the second in the end. Even though the curves have 95% CIs, it’s still hard to tell if they are significantly different among three datasets.
 
------
+<img align="left" width="500" height="250" src="https://github.com/ensembles4612/Statistical-Analysis-on-Biochemical-Recurrence-Prostate-Cancer-Among-Patients-in-3-Locations/blob/main/graph1.png">
 
 ### 2.2 KM curves among different Gleason Scores (Graph 2)  
 
 From Graph 2, it’s uneasy to tell if the survival rates of patients having different Gleason Scores are significantly different. Also, not enough observations for Gleason Scores are 5 and 10.
 
------
+<img align="left" width="500" height="250" src="https://github.com/ensembles4612/Statistical-Analysis-on-Biochemical-Recurrence-Prostate-Cancer-Among-Patients-in-3-Locations/blob/main/graph2.png">
 
 ## Section 3: Stratified Logrank Test among three datasets 
 
@@ -100,12 +110,12 @@ In order to know which demographic factors and genes have influence on BCR free 
   Likelihood ratio test=114.8  on 20 df, p=3e-15
   n= 341, number of events= 98 
   ```
-* **Model 2**: adding interaction terms between “dataset” and each gene: Likelihood ratio test=182.5 on 55 df, p=1e-15 (182.5>114.8, so it was chosen)
-```
-Surv(Time, Event, type = "right") ~ iCluster + Gleason + dataset + ENO2 + NCAM1 + SYP + CHGA + FOLH1 + SLC2A1 +  SLC2A3 + SLC2A4 + SLC2A5 + SLC2A6 + SLC2A7 + SLC2A8 + SLC2A10 + SLC2A12 + GCK + HK1 + dataset:NCAM1 + dataset:SYP + dataset:CHGA + dataset:FOLH1 + dataset:SLC2A1 + dataset:SLC2A3 + dataset:SLC2A5 + dataset:SLC2A6 + dataset:SLC2A7 + dataset:SLC2A8 + dataset:SLC2A12 + dataset:GCK + dataset:HK1 #26(13*2) interaction terms stay in the model
-Likelihood ratio test=182.5  on 55 df, p=1e-15
-n= 341, number of events= 98
-```
+* **Model 2**: adding interaction terms between “dataset” and each gene: Likelihood ratio test=182.5 on 55 df, p=1e-15 
+ ```
+ Surv(Time, Event, type = "right") ~ iCluster + Gleason + dataset + ENO2 + NCAM1 + SYP + CHGA + FOLH1 + SLC2A1 +  SLC2A3 + SLC2A4 + SLC2A5 + SLC2A6 + SLC2A7 +SLC2A8 + SLC2A10 + SLC2A12 + GCK + HK1 + dataset:NCAM1 + dataset:SYP + dataset:CHGA + dataset:FOLH1 + dataset:SLC2A1 + dataset:SLC2A3 + dataset:SLC2A5 +dataset:SLC2A6 + dataset:SLC2A7 + dataset:SLC2A8 + dataset:SLC2A12 + dataset:GCK + dataset:HK1 #26(13*2) interaction terms stay in the model
+ Likelihood ratio test=182.5  on 55 df, p=1e-15
+ n= 341, number of events= 98
+ ```
 
 ## Section 7: Investigating which factors and genes have greater effects using Random Survival Forests
 
@@ -113,13 +123,9 @@ I used Random Survival Forest technique to find which factors and genes have gre
 
 * Graph below shows the Leave-one-out cross validation error drops fast and then stables at around 29% as the number of trees increases. 
 
----
+<img align="left" width="300" height="300" src="https://github.com/ensembles4612/Statistical-Analysis-on-Biochemical-Recurrence-Prostate-Cancer-Among-Patients-in-3-Locations/blob/main/Random%20Survival%20Forests-trees.png">
 
 * We can see the importance of each variable with ranking below. “Gleason” has the greatest effect on survival followed by genes—FOLH1, SLC2A1, SYP, SLC2A8 and so forth.
 
----
+<img align="left" width="300" height="300" src="https://github.com/ensembles4612/Statistical-Analysis-on-Biochemical-Recurrence-Prostate-Cancer-Among-Patients-in-3-Locations/blob/main/Random%20Survival%20Forests-importance.png">
 
-## Resources and References
-* **Data Source**: 3 datasets are from built-in libraries: library(prostateCancerCamcap), library(prostateCancerTaylor), library(prostateCancerStockholm)
-* **Language Used**: R and RStudio
-* **Libraries Used**: ggplot2, tidyr, devtools, dplyr, party, survival, tcltk, tcltk2, forcats, compareGroups, rms, npsurv, MASS, survminer, randomForestSRC
